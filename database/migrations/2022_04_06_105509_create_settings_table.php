@@ -15,7 +15,9 @@ class CreateSettingsTable extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-
+            $table->integer('default_reminder_days');
+            $table->string('reminder_time');
+            $table->string('currency');
             $table->timestamps();
         });
     }

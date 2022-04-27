@@ -16,11 +16,15 @@ class CreateBillsTable extends Migration
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount', 10, 2);
+            $table->string('currency');
             $table->string('payee');
             $table->text('note');
-            $table->date('due_date');
-            $table->integer('repeat');
-            $table->tinyInteger('status')->default('1');
+            $table->dateTime('due_date');
+            $table->enum('transaction_type',['payable', 'receivable']);
+            $table->integer('repeat')->nullable();
+            $table->string('repeat_unit')->nullable();
+            $table->integer('notification')->default(5);
+            $table->tinyInteger('status')->default(1);
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id');
 

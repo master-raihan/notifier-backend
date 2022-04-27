@@ -7,6 +7,6 @@ class Bill extends Model
 {
     protected $table = 'bills';
     protected $fillable = [
-        'amount', 'payee', 'note', 'due_date', 'repeat', 'status', 'category_id', 'user_id'
+        'currency', 'amount', 'payee', 'note', 'due_date', 'repeat', 'repeat_unit','status', 'category_id', 'user_id', 'notification', 'transaction_type'
     ];
 }

@@ -2,7 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\BillContract;
+use App\Helpers\UtilityHelper;
+use App\Models\DailyReminder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BillController extends Controller
 {
@@ -11,6 +14,12 @@ class BillController extends Controller
     public function __construct(BillContract $billService)
     {
         $this->billService = $billService;
+    }
+
+    public function reportBills(): \Illuminate\Http\JsonResponse
+    {
+        $serviceResponse = $this->billService->reportBills();
+        return response()->json($serviceResponse, $serviceResponse['status']);
     }
 
     public function getAllBills(): \Illuminate\Http\JsonResponse
@@ -41,5 +50,14 @@ class BillController extends Controller
     {
         $serviceResponse = $this->billService->getBill($id);
         return response()->json($serviceResponse, $serviceResponse['status']);
+    }
+
+    public function getNotifications(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(UtilityHelper::RETURN_SUCCESS_FORMAT(
+            200,
+            'New Notifications',
+            DailyReminder::where('user_id', Auth::user()->id)->get(),
+        ), 200);
     }
 }

@@ -12,9 +12,9 @@ class CategoryRepositoryEloquent extends BaseRepository implements CategoryRepos
         return new Category();
     }
 
-    public function getAllCategories($userId)
+    public function getAllCategories()
     {
-        return $this->model->where("user_id", $userId)->get();
+        return $this->model->get();
     }
 
     public function createCategory($category)

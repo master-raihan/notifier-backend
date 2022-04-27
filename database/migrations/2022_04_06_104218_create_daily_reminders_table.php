@@ -15,11 +15,13 @@ class CreateDailyRemindersTable extends Migration
     {
         Schema::create('daily_reminders', function (Blueprint $table) {
             $table->id();
-            $table->integer('time_before');
+            $table->integer('time_before')->nullable();
             $table->unsignedBigInteger('bill_id');
-            $table->tinyInteger('status')->default('1');
-
+            $table->unsignedBigInteger('user_id');
+            $table->json('data');
+            $table->tinyInteger('status')->default(0);
             $table->foreign('bill_id')->references('id')->on('bills');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -36,4 +36,9 @@ class BillRepositoryEloquent extends BaseRepository implements BillRepository
     {
         return $this->model->find($id);
     }
+
+    public function getUnpaidBills()
+    {
+        return $this->model->where("status", 0)->get();
+    }
 }

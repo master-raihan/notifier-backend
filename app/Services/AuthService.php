@@ -40,7 +40,9 @@ class AuthService implements AuthContract
             if (! $token = Auth::attempt($credentials)) {
                 return UtilityHelper::RETURN_ERROR_FORMAT(
                     ResponseAlias::HTTP_UNAUTHORIZED,
-                    'Unauthorized Access!',
+                    [
+                        'email' => ['Unknown Email or Password']
+                    ],
                 );
             }
 
@@ -124,12 +126,29 @@ class AuthService implements AuthContract
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'status' => $request->status
+                'status' => $request->status ? $request->status : 1
             ];
 
             $userData = $this->userRepository->createUser($user);
 
-            return UtilityHelper::RETURN_SUCCESS_FORMAT(ResponseAlias::HTTP_OK, "User Registration Successfully Done.", $userData);
+            if($userData){
+                $credentials = $request->only(['email', 'password']);
+
+                if (! $token = Auth::attempt($credentials)) {
+                    return UtilityHelper::RETURN_ERROR_FORMAT(
+                        ResponseAlias::HTTP_UNAUTHORIZED,
+                        [
+                            'email' => ['Unknown Email or Password']
+                        ],
+                    );
+                }
+
+                return UtilityHelper::RETURN_SUCCESS_FORMAT(ResponseAlias::HTTP_OK,
+                    'Successfully Authenticated!',
+                    $this->respondWithToken($token)
+                );
+            }
+
         }catch (\Exception $exception){
             Log::error($exception->getMessage());
             return UtilityHelper::RETURN_ERROR_FORMAT(ResponseAlias::HTTP_BAD_REQUEST, "Something went wrong!!");
